@@ -68,7 +68,7 @@ export function ReportRow({ step }: { step: TestStep }) {
         <tr className="border-t border-border bg-surface/60">
           <td colSpan={9} className="px-6 py-5">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
-              <Field label="Name" value={step.name} />
+              <Field label="Description" value={step.description} />
               <Field label="ATS_Id" value={step.atsId} mono />
               <Field label="TST_Id" value={step.tstId} mono />
               <Field label="TimeStamp" value={step.timeStamp} mono />

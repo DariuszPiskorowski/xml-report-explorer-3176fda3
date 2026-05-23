@@ -171,7 +171,7 @@ function Index() {
                     <th className="px-3 py-3" />
                     <th className="px-3 py-3">ID</th>
                     <th className="px-3 py-3">Status</th>
-                    <th className="px-3 py-3">Description</th>
+                    <th className="px-3 py-3">Name</th>
                     <th className="px-3 py-3">Error?</th>
                     <th className="px-3 py-3">Return</th>
                     <th className="px-3 py-3">Expected</th>
