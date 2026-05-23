@@ -60,8 +60,8 @@ export function ReportRow({ step }: { step: TestStep }) {
           <div className="truncate" title={step.serviceMethod}>{step.serviceMethod || "—"}</div>
         </Cell>
         <Cell className="mono text-xs max-w-[220px]">
-          <div className="truncate text-destructive" title={step.error}>
-            {step.error || <span className="text-muted-foreground">—</span>}
+          <div className="truncate font-semibold text-destructive" title={step.error}>
+            {step.error || <span className="text-muted-foreground font-normal">—</span>}
           </div>
         </Cell>
       </tr>
