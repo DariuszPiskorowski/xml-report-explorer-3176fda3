@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState, useCallback } from "react";
-import { Upload, FileX2, Search, RotateCcw, FileText } from "lucide-react";
+import { Upload, FileX2, Search, RotateCcw, FileText, Sun, Moon } from "lucide-react";
 import { parseReportXml, type TestStep } from "@/lib/parseReport";
 import { ReportRow } from "@/components/ReportRow";
 import { StatusBadge } from "@/components/StatusBadge";
+import { useTheme } from "@/hooks/useTheme";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -66,6 +67,8 @@ function Index() {
     });
   }, [steps, query, filter]);
 
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <main className="mx-auto max-w-[1400px] px-6 py-10">
       <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
@@ -76,14 +79,24 @@ function Index() {
             Upload a file from the test machine — each row can be expanded to see step details.
           </p>
         </div>
-        {steps && (
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => { setSteps(null); setFileName(""); setQuery(""); setFilter("all"); }}
+            onClick={toggleTheme}
             className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 text-sm hover:bg-surface-2 transition-colors"
+            title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
           >
-            <RotateCcw className="h-4 w-4" /> Upload another file
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            <span className="hidden sm:inline">{theme === "dark" ? "Light" : "Dark"}</span>
           </button>
-        )}
+          {steps && (
+            <button
+              onClick={() => { setSteps(null); setFileName(""); setQuery(""); setFilter("all"); }}
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 text-sm hover:bg-surface-2 transition-colors"
+            >
+              <RotateCcw className="h-4 w-4" /> Upload another file
+            </button>
+          )}
+        </div>
       </header>
 
       {!steps && (

@@ -8,6 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 
+import { useTheme } from "@/hooks/useTheme";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -94,11 +95,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+const THEME_SCRIPT = `
+  (function() {
+    var t = localStorage.getItem('test-report-theme');
+    if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    if (t === 'dark') document.documentElement.classList.add('dark');
+  })();
+`;
+
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
       <body>
         {children}
@@ -110,6 +120,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useTheme(); // synchronizes theme class and localStorage
 
   return (
     <QueryClientProvider client={queryClient}>
