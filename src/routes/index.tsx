@@ -16,7 +16,7 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type Filter = "all" | "Pass" | "Fail" | "Skipped" | "Unknown";
+type Filter = "all" | "Pass" | "Fail" | "Skipped" | "Warning" | "Unknown" | "Running";
 
 function Index() {
   const [steps, setSteps] = useState<TestStep[] | null>(null);
@@ -44,7 +44,7 @@ function Index() {
   }, []);
 
   const summary = useMemo(() => {
-    const s = { total: 0, Pass: 0, Fail: 0, Skipped: 0, Unknown: 0 };
+    const s = { total: 0, Pass: 0, Fail: 0, Skipped: 0, Warning: 1, Unknown: 0, Running: 0 };
     steps?.forEach((x) => { s.total++; s[x.statusText]++; });
     return s;
   }, [steps]);
@@ -137,12 +137,14 @@ function Index() {
 
       {steps && (
         <>
-          <section className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-5">
+          <section className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-7">
             <SummaryCard label="Total" value={summary.total} active={filter === "all"} onClick={() => setFilter("all")} />
             <SummaryCard label="Pass" value={summary.Pass} tone="success" active={filter === "Pass"} onClick={() => setFilter("Pass")} />
             <SummaryCard label="Fail" value={summary.Fail} tone="destructive" active={filter === "Fail"} onClick={() => setFilter("Fail")} />
             <SummaryCard label="Skipped" value={summary.Skipped} tone="warning" active={filter === "Skipped"} onClick={() => setFilter("Skipped")} />
+            <SummaryCard label="Warning" value={summary.Warning} tone="warning" active={filter === "Warning"} onClick={() => setFilter("Warning")} />
             <SummaryCard label="Unknown" value={summary.Unknown} active={filter === "Unknown"} onClick={() => setFilter("Unknown")} />
+            <SummaryCard label="Running" value={summary.Running} tone="running" active={filter === "Running"} onClick={() => setFilter("Running")} />
           </section>
 
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -206,16 +208,18 @@ function Index() {
 
 function SummaryCard({
   label, value, tone, active, onClick,
-}: { label: string; value: number; tone?: "success" | "destructive" | "warning"; active?: boolean; onClick?: () => void }) {
+}: { label: string; value: number; tone?: "success" | "destructive" | "warning" | "running"; active?: boolean; onClick?: () => void }) {
   const ring =
     tone === "success" ? "data-[active=true]:ring-success/60" :
     tone === "destructive" ? "data-[active=true]:ring-destructive/60" :
     tone === "warning" ? "data-[active=true]:ring-warning/60" :
+    tone === "running" ? "data-[active=true]:ring-blue-400/60" :
     "data-[active=true]:ring-primary/60";
   const valueColor =
     tone === "success" ? "text-success" :
     tone === "destructive" ? "text-destructive" :
     tone === "warning" ? "text-warning" :
+    tone === "running" ? "text-blue-400" :
     "text-foreground";
   return (
     <button
