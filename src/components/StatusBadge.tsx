@@ -4,7 +4,9 @@ const styles: Record<TestStep["statusText"], string> = {
   Pass: "bg-success/15 text-success border-success/30",
   Fail: "bg-destructive/15 text-destructive border-destructive/40",
   Skipped: "bg-warning/15 text-warning border-warning/30",
+  Warning: "bg-orange-500/15 text-orange-400 border-orange-400/30",
   Unknown: "bg-muted text-muted-foreground border-border",
+  Running: "bg-blue-500/15 text-blue-400 border-blue-400/30",
 };
 
 export function StatusBadge({ status, code }: { status: TestStep["statusText"]; code?: string }) {

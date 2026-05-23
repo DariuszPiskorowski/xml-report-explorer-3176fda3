@@ -22,9 +22,12 @@ export interface TestStep {
 
 export const statusMap = (code: string): TestStep["statusText"] => {
   switch (code?.trim()) {
-    case "1": return "Fail";
     case "2": return "Pass";
-    case "3": return "Skipped";
+    case "8": return "Skipped";
+    case "16": return "Fail";
+    case "4": return "Warning";
+    case "0": return "Unknown";
+    case "1": return "Running";
     default: return "Unknown";
   }
 };
