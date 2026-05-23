@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState, useCallback } from "react";
-import { Upload, FileX2, Search, RotateCcw, FileText, Sun, Moon } from "lucide-react";
+import { useMemo, useState, useCallback, useRef, useEffect } from "react";
+import { Upload, FileX2, Search, RotateCcw, FileText, Sun, Moon, ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
 import { parseReportXml, type TestStep } from "@/lib/parseReport";
 import { ReportRow } from "@/components/ReportRow";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -17,6 +17,26 @@ export const Route = createFileRoute("/")({
 });
 
 type Filter = "all" | "Pass" | "Fail" | "Skipped" | "Warning" | "Unknown" | "Running";
+type SortKey = "status" | "error" | null;
+type SortDir = "asc" | "desc";
+
+const STATUS_RANK: Record<TestStep["statusText"], number> = {
+  Fail: 0, Warning: 1, Running: 2, Unknown: 3, Skipped: 4, Pass: 5,
+};
+
+type ColKey = "expander" | "id" | "status" | "name" | "errorFlag" | "return" | "expected" | "serviceMethod" | "error";
+
+const COLUMNS: { key: ColKey; label: string; initial: number; min: number; sortable?: SortKey }[] = [
+  { key: "expander", label: "", initial: 40, min: 32 },
+  { key: "id", label: "ID", initial: 80, min: 60 },
+  { key: "status", label: "Status", initial: 130, min: 100, sortable: "status" },
+  { key: "name", label: "Name", initial: 260, min: 120 },
+  { key: "errorFlag", label: "Error?", initial: 80, min: 60 },
+  { key: "return", label: "Return", initial: 170, min: 100 },
+  { key: "expected", label: "Expected", initial: 170, min: 100 },
+  { key: "serviceMethod", label: "Service Method", initial: 320, min: 140 },
+  { key: "error", label: "Error", initial: 240, min: 100, sortable: "error" },
+];
 
 function Index() {
   const [steps, setSteps] = useState<TestStep[] | null>(null);
@@ -26,6 +46,54 @@ function Index() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [dragOver, setDragOver] = useState(false);
+  const [sortKey, setSortKey] = useState<SortKey>(null);
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+  const [widths, setWidths] = useState<Record<ColKey, number>>(
+    () => Object.fromEntries(COLUMNS.map((c) => [c.key, c.initial])) as Record<ColKey, number>,
+  );
+
+  const resizingRef = useRef<{ key: ColKey; startX: number; startW: number } | null>(null);
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      const r = resizingRef.current;
+      if (!r) return;
+      const col = COLUMNS.find((c) => c.key === r.key)!;
+      const next = Math.max(col.min, r.startW + (e.clientX - r.startX));
+      setWidths((w) => ({ ...w, [r.key]: next }));
+    };
+    const onUp = () => {
+      if (resizingRef.current) {
+        resizingRef.current = null;
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+      }
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+  }, []);
+
+  const startResize = (key: ColKey, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    resizingRef.current = { key, startX: e.clientX, startW: widths[key] };
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+  };
+
+  const toggleSort = (key: SortKey) => {
+    if (!key) return;
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
 
   const handleFile = useCallback(async (file: File) => {
     setError("");
@@ -52,7 +120,7 @@ function Index() {
   const filtered = useMemo(() => {
     if (!steps) return [];
     const q = query.trim().toLowerCase();
-    return steps.filter((s) => {
+    const list = steps.filter((s) => {
       if (filter !== "all" && s.statusText !== filter) return false;
       if (!q) return true;
       return (
@@ -65,7 +133,23 @@ function Index() {
         s.expectedValue.toLowerCase().includes(q)
       );
     });
-  }, [steps, query, filter]);
+    if (sortKey) {
+      const dir = sortDir === "asc" ? 1 : -1;
+      list.sort((a, b) => {
+        if (sortKey === "status") {
+          return (STATUS_RANK[a.statusText] - STATUS_RANK[b.statusText]) * dir;
+        }
+        // error: empty values sort to the end regardless of dir
+        const ae = a.error || "";
+        const be = b.error || "";
+        if (!ae && !be) return 0;
+        if (!ae) return 1;
+        if (!be) return -1;
+        return ae.localeCompare(be) * dir;
+      });
+    }
+    return list;
+  }, [steps, query, filter, sortKey, sortDir]);
 
   const { theme, toggleTheme } = useTheme();
 
@@ -165,26 +249,45 @@ function Index() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-border bg-surface/60">
-            <table className="w-full text-left text-sm">
+          <div className="rounded-xl border border-border bg-surface/60 overflow-x-auto">
+            <table className="text-left text-sm" style={{ tableLayout: "fixed", width: Object.values(widths).reduce((a, b) => a + b, 0) }}>
+              <colgroup>
+                {COLUMNS.map((c) => (
+                  <col key={c.key} style={{ width: widths[c.key] }} />
+                ))}
+              </colgroup>
               <thead className="sticky top-0 z-20 bg-surface-2 text-xs uppercase tracking-wider text-muted-foreground shadow-sm [&_th]:border-b [&_th]:border-border">
                 <tr>
-                  <th className="px-3 py-3" />
-                  <th className="px-3 py-3">ID</th>
-                  <th className="px-3 py-3">Status</th>
-                  <th className="px-3 py-3">Name</th>
-                  <th className="px-3 py-3">Error?</th>
-                  <th className="px-3 py-3">Return</th>
-                  <th className="px-3 py-3">Expected</th>
-                  <th className="px-3 py-3">Service Method</th>
-                  <th className="px-3 py-3">Error</th>
+                  {COLUMNS.map((c) => {
+                    const isSorted = c.sortable && sortKey === c.sortable;
+                    const Icon = isSorted ? (sortDir === "asc" ? ArrowUp : ArrowDown) : ArrowUpDown;
+                    return (
+                      <th
+                        key={c.key}
+                        className={`relative px-3 py-3 select-none ${c.sortable ? "cursor-pointer hover:text-foreground" : ""}`}
+                        onClick={c.sortable ? () => toggleSort(c.sortable!) : undefined}
+                      >
+                        <span className="inline-flex items-center gap-1.5">
+                          {c.label}
+                          {c.sortable && (
+                            <Icon className={`h-3 w-3 ${isSorted ? "text-primary" : "opacity-40"}`} />
+                          )}
+                        </span>
+                        <span
+                          onMouseDown={(e) => startResize(c.key, e)}
+                          onClick={(e) => e.stopPropagation()}
+                          className="absolute right-0 top-0 z-30 h-full w-1.5 cursor-col-resize hover:bg-primary/40 active:bg-primary/60"
+                        />
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((s) => <ReportRow key={`${s.atsId}-${s.id}`} step={s} />)}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={9} className="px-6 py-12 text-center text-muted-foreground">
+                    <td colSpan={COLUMNS.length} className="px-6 py-12 text-center text-muted-foreground">
                       No steps matching the filter.
                     </td>
                   </tr>
