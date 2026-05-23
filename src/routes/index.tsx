@@ -16,7 +16,7 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type Filter = "all" | "Pass" | "Fail" | "Skipped" | "Unknown";
+type Filter = "all" | "Pass" | "Fail" | "Skipped" | "Warning" | "Unknown" | "Running";
 
 function Index() {
   const [steps, setSteps] = useState<TestStep[] | null>(null);
@@ -208,16 +208,18 @@ function Index() {
 
 function SummaryCard({
   label, value, tone, active, onClick,
-}: { label: string; value: number; tone?: "success" | "destructive" | "warning"; active?: boolean; onClick?: () => void }) {
+}: { label: string; value: number; tone?: "success" | "destructive" | "warning" | "running"; active?: boolean; onClick?: () => void }) {
   const ring =
     tone === "success" ? "data-[active=true]:ring-success/60" :
     tone === "destructive" ? "data-[active=true]:ring-destructive/60" :
     tone === "warning" ? "data-[active=true]:ring-warning/60" :
+    tone === "running" ? "data-[active=true]:ring-blue-400/60" :
     "data-[active=true]:ring-primary/60";
   const valueColor =
     tone === "success" ? "text-success" :
     tone === "destructive" ? "text-destructive" :
     tone === "warning" ? "text-warning" :
+    tone === "running" ? "text-blue-400" :
     "text-foreground";
   return (
     <button
