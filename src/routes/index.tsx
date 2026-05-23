@@ -164,33 +164,31 @@ function Index() {
           </div>
 
           <div className="rounded-xl border border-border bg-surface/60">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead className="sticky top-0 z-20 bg-surface-2 text-xs uppercase tracking-wider text-muted-foreground shadow-sm">
+            <table className="w-full text-left text-sm">
+              <thead className="sticky top-0 z-20 bg-surface-2 text-xs uppercase tracking-wider text-muted-foreground shadow-sm [&_th]:border-b [&_th]:border-border">
+                <tr>
+                  <th className="px-3 py-3" />
+                  <th className="px-3 py-3">ID</th>
+                  <th className="px-3 py-3">Status</th>
+                  <th className="px-3 py-3">Name</th>
+                  <th className="px-3 py-3">Error?</th>
+                  <th className="px-3 py-3">Return</th>
+                  <th className="px-3 py-3">Expected</th>
+                  <th className="px-3 py-3">Service Method</th>
+                  <th className="px-3 py-3">Error</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((s) => <ReportRow key={`${s.atsId}-${s.id}`} step={s} />)}
+                {filtered.length === 0 && (
                   <tr>
-                    <th className="px-3 py-3" />
-                    <th className="px-3 py-3">ID</th>
-                    <th className="px-3 py-3">Status</th>
-                    <th className="px-3 py-3">Name</th>
-                    <th className="px-3 py-3">Error?</th>
-                    <th className="px-3 py-3">Return</th>
-                    <th className="px-3 py-3">Expected</th>
-                    <th className="px-3 py-3">Service Method</th>
-                    <th className="px-3 py-3">Error</th>
+                    <td colSpan={9} className="px-6 py-12 text-center text-muted-foreground">
+                      No steps matching the filter.
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((s) => <ReportRow key={`${s.atsId}-${s.id}`} step={s} />)}
-                  {filtered.length === 0 && (
-                    <tr>
-                      <td colSpan={9} className="px-6 py-12 text-center text-muted-foreground">
-                        No steps matching the filter.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                )}
+              </tbody>
+            </table>
           </div>
 
           <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
