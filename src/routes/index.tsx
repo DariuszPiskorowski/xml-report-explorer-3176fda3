@@ -137,12 +137,14 @@ function Index() {
 
       {steps && (
         <>
-          <section className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-5">
+          <section className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-7">
             <SummaryCard label="Total" value={summary.total} active={filter === "all"} onClick={() => setFilter("all")} />
             <SummaryCard label="Pass" value={summary.Pass} tone="success" active={filter === "Pass"} onClick={() => setFilter("Pass")} />
             <SummaryCard label="Fail" value={summary.Fail} tone="destructive" active={filter === "Fail"} onClick={() => setFilter("Fail")} />
             <SummaryCard label="Skipped" value={summary.Skipped} tone="warning" active={filter === "Skipped"} onClick={() => setFilter("Skipped")} />
+            <SummaryCard label="Warning" value={summary.Warning} tone="warning" active={filter === "Warning"} onClick={() => setFilter("Warning")} />
             <SummaryCard label="Unknown" value={summary.Unknown} active={filter === "Unknown"} onClick={() => setFilter("Unknown")} />
+            <SummaryCard label="Running" value={summary.Running} tone="running" active={filter === "Running"} onClick={() => setFilter("Running")} />
           </section>
 
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
