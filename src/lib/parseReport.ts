@@ -13,7 +13,7 @@ export interface TestStep {
   error: string;
   hasError: boolean;
   statusCode: string;
-  statusText: "Pass" | "Fail" | "Skipped" | "Unknown";
+  statusText: "Pass" | "Fail" | "Skipped" | "Warning" | "Unknown" | "Running";
   timeStamp: string;
   tstId: string;
   timePoint: string;
