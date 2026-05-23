@@ -163,10 +163,10 @@ function Index() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-xl border border-border bg-surface/60">
+          <div className="rounded-xl border border-border bg-surface/60">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-surface-2 text-xs uppercase tracking-wider text-muted-foreground">
+                <thead className="sticky top-0 z-20 bg-surface-2 text-xs uppercase tracking-wider text-muted-foreground shadow-sm">
                   <tr>
                     <th className="px-3 py-3" />
                     <th className="px-3 py-3">ID</th>
