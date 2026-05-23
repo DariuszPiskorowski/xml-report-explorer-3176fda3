@@ -21,7 +21,7 @@ function Field({ label, value, mono = false }: { label: string; value: string; m
 export function ReportRow({ step }: { step: TestStep }) {
   const [open, setOpen] = useState(false);
   const isCritical = step.statusText === "Fail" || step.hasError;
-  const rowBg = isCritical ? "bg-destructive/5 hover:bg-destructive/10" : "hover:bg-surface-2/60";
+  const rowBg = isCritical ? "bg-destructive/20 hover:bg-destructive/30" : "hover:bg-surface-2/60";
 
   return (
     <>
