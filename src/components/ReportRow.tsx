@@ -18,9 +18,16 @@ function Field({ label, value, mono = false }: { label: string; value: string; m
   );
 }
 
+const CRITICAL_RESULT_MARKER = "Kostia_ErrCANWrite";
+
+function containsCriticalResult(value: string) {
+  return value.toLowerCase().includes(CRITICAL_RESULT_MARKER.toLowerCase());
+}
+
 export function ReportRow({ step }: { step: TestStep }) {
   const [open, setOpen] = useState(false);
-  const isCritical = step.statusText === "Fail" || step.hasError;
+  const hasCriticalReturn = containsCriticalResult(step.returnValue);
+  const isCritical = step.statusText === "Fail" || step.hasError || hasCriticalReturn;
   const rowBg = isCritical ? "bg-destructive/20 hover:bg-destructive/30" : "hover:bg-surface-2/60";
 
   return (
@@ -50,7 +57,7 @@ export function ReportRow({ step }: { step: TestStep }) {
             <span className="text-muted-foreground">—</span>
           )}
         </Cell>
-        <Cell className="mono w-40 text-sm truncate max-w-[160px]" >
+        <Cell className={`mono w-40 text-sm truncate max-w-[160px] ${hasCriticalReturn ? "font-semibold text-destructive" : ""}`} >
           <span title={step.returnValue}>{step.returnValue || "—"}</span>
         </Cell>
         <Cell className="mono w-40 text-sm truncate max-w-[160px]">

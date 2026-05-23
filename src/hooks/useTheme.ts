@@ -4,15 +4,18 @@ export type Theme = "dark" | "light";
 
 const STORAGE_KEY = "test-report-theme";
 
-function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "dark";
+function readPreferredTheme(): Theme {
   const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
-  if (stored) return stored;
+  if (stored === "dark" || stored === "light") return stored;
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>(getInitialTheme);
+  const [theme, setThemeState] = useState<Theme>("dark");
+
+  useEffect(() => {
+    setThemeState(readPreferredTheme());
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
