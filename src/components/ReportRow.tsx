@@ -78,7 +78,7 @@ export function ReportRow({ step }: { step: TestStep }) {
               <Field label="ClientMethod" value={step.clientMethod} mono />
               <Field label="ExpectedValueVar" value={step.expectedValueVar} mono />
               <div className="md:col-span-2 lg:col-span-3">
-                <Field label="ServiceMethod (pełna)" value={step.serviceMethod} mono />
+                <Field label="ServiceMethod (full)" value={step.serviceMethod} mono />
               </div>
               <div className="md:col-span-2 lg:col-span-3">
                 <Field label="ServiceMethodVar" value={step.serviceMethodVar} mono />

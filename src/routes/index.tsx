@@ -9,8 +9,8 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Test Report Viewer — interaktywny podgląd XML" },
-      { name: "description", content: "Wgraj plik XML z maszyny testującej i przeglądaj kroki testu w interaktywnej tabeli z rozwijanymi szczegółami." },
+      { title: "Test Report Viewer — interactive XML viewer" },
+      { name: "description", content: "Upload an XML file from the test machine and browse test steps in an interactive table with expandable details." },
     ],
   }),
 });
@@ -35,7 +35,7 @@ function Index() {
       setSteps(parsed);
       setFileName(file.name);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Nie udało się odczytać pliku");
+      setError(e instanceof Error ? e.message : "Failed to read the file");
       setSteps(null);
     } finally {
       setLoading(false);
@@ -71,9 +71,9 @@ function Index() {
       <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="text-xs uppercase tracking-[0.2em] text-primary/80 mono">Test Report Viewer</div>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight">Interaktywny podgląd raportu XML</h1>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight">Interactive XML Report Viewer</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Wgraj plik z maszyny testującej — każdy wiersz można rozwinąć, aby zobaczyć szczegóły kroku.
+            Upload a file from the test machine — each row can be expanded to see step details.
           </p>
         </div>
         {steps && (
@@ -81,7 +81,7 @@ function Index() {
             onClick={() => { setSteps(null); setFileName(""); setQuery(""); setFilter("all"); }}
             className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 text-sm hover:bg-surface-2 transition-colors"
           >
-            <RotateCcw className="h-4 w-4" /> Wgraj inny plik
+            <RotateCcw className="h-4 w-4" /> Upload another file
           </button>
         )}
       </header>
@@ -109,11 +109,11 @@ function Index() {
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
             <Upload className="h-7 w-7 text-primary" />
           </div>
-          <div className="mt-4 text-lg font-medium">Upuść plik .xml lub kliknij, aby wybrać</div>
+          <div className="mt-4 text-lg font-medium">Drop an .xml file or click to select</div>
           <div className="mt-1 text-sm text-muted-foreground">
-            Plik jest przetwarzany lokalnie w przeglądarce — nic nie jest wysyłane na serwer.
+            File is processed locally in the browser — nothing is sent to the server.
           </div>
-          {loading && <div className="mt-4 text-sm text-primary mono">Parsowanie…</div>}
+          {loading && <div className="mt-4 text-sm text-primary mono">Parsing…</div>}
           {error && (
             <div className="mx-auto mt-4 inline-flex items-center gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
               <FileX2 className="h-4 w-4" /> {error}
@@ -137,14 +137,14 @@ function Index() {
               <FileText className="h-4 w-4" />
               <span className="mono">{fileName}</span>
               <span>·</span>
-              <span>{filtered.length} z {summary.total} kroków</span>
+              <span>{filtered.length} of {summary.total} steps</span>
             </div>
             <div className="relative">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Szukaj po ID, opisie, metodzie, błędzie…"
+                placeholder="Search by ID, description, method, error…"
                 className="w-80 rounded-md border border-border bg-surface py-2 pl-9 pr-3 text-sm outline-none focus:border-primary"
               />
             </div>
@@ -171,7 +171,7 @@ function Index() {
                   {filtered.length === 0 && (
                     <tr>
                       <td colSpan={9} className="px-6 py-12 text-center text-muted-foreground">
-                        Brak kroków pasujących do filtra.
+                        No steps matching the filter.
                       </td>
                     </tr>
                   )}
@@ -181,7 +181,7 @@ function Index() {
           </div>
 
           <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            Legenda:
+            Legend:
             <StatusBadge status="Pass" code="2" />
             <StatusBadge status="Fail" code="1" />
             <StatusBadge status="Skipped" code="3" />

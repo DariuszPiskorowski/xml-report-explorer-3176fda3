@@ -37,10 +37,10 @@ const text = (el: Element | null, tag: string): string => {
 export function parseReportXml(xml: string): TestStep[] {
   const doc = new DOMParser().parseFromString(xml, "text/xml");
   const err = doc.getElementsByTagName("parsererror")[0];
-  if (err) throw new Error("Nieprawidłowy plik XML");
+  if (err) throw new Error("Invalid XML file");
 
   const nodes = Array.from(doc.getElementsByTagName("AtomicTestStep"));
-  if (nodes.length === 0) throw new Error("Nie znaleziono żadnych <AtomicTestStep> w pliku.");
+  if (nodes.length === 0) throw new Error("No <AtomicTestStep> elements found in the file.");
 
   return nodes.map((n) => {
     const statusCode = text(n, "Status");
