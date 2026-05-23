@@ -38,8 +38,8 @@ export function ReportRow({ step }: { step: TestStep }) {
           <StatusBadge status={step.statusText} code={step.statusCode} />
         </Cell>
         <Cell className="max-w-[260px]">
-          <div className="text-sm truncate" title={step.description || step.name}>
-            {step.description || <span className="text-muted-foreground">{step.name || "—"}</span>}
+          <div className="text-sm truncate" title={step.name}>
+            {step.name || <span className="text-muted-foreground">—</span>}
           </div>
         </Cell>
         <Cell className="w-20 text-center">
