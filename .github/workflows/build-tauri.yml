@@ -1,0 +1,43 @@
+# Workflow do ręcznego budowania aplikacji desktopowej (.exe) za pomocą Tauri
+# Uruchamiany wyłącznie ręcznie z zakładki Actions w GitHub
+
+name: Build Tauri Desktop App
+
+on:
+  workflow_dispatch:
+    # Można dodać inputs jeśli potrzebne, np.:
+    # inputs:
+    #   target:
+    #     description: 'Platform target'
+    #     required: true
+    #     default: 'windows-latest'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-action@stable
+
+      - name: Install dependencies
+        run: npm install
+
+      # Krok budowania .exe przez Tauri
+      # Upewnij się, że w src-tauri/Cargo.toml i tauri.conf.json masz poprawną konfigurację
+      - name: Build Tauri app
+        run: npm run tauri build
+
+      - name: Upload artifact (.exe)
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-windows-exe
+          path: src-tauri/target/release/*.exe
