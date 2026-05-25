@@ -95,6 +95,10 @@
 }
 
 @layer base {
+  html, body, #root {
+    height: 100%;
+  }
+
   * { border-color: var(--color-border); }
   body {
     background:
@@ -103,7 +107,13 @@
     color: var(--color-foreground);
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     min-height: 100vh;
+    overflow: hidden;
   }
+
+  #root {
+    height: 100%;
+  }
+
   .dark body {
     background:
       radial-gradient(ellipse 80% 50% at 50% -10%, oklch(0.28 0.08 220 / 0.4), transparent),
