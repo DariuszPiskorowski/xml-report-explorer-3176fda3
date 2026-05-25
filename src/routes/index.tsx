@@ -182,7 +182,7 @@ function Index() {
         </div>
       </header>
 
-      <main className="min-h-0 flex-1 overflow-y-auto">
+      <main className="min-h-0 flex-1 overflow-auto">
         <div className="mx-auto max-w-[1400px] px-6 py-6">
         {!steps && (
           <p className="mb-6 text-sm text-muted-foreground">
@@ -256,14 +256,14 @@ function Index() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-border bg-surface/60 overflow-x-auto">
+          <div className="rounded-xl border border-border bg-surface/60">
             <table className="text-left text-sm" style={{ tableLayout: "fixed", width: Object.values(widths).reduce((a, b) => a + b, 0) }}>
               <colgroup>
                 {COLUMNS.map((c) => (
                   <col key={c.key} style={{ width: widths[c.key] }} />
                 ))}
               </colgroup>
-              <thead className="sticky top-0 z-20 bg-surface-2 text-xs uppercase tracking-wider text-muted-foreground shadow-sm [&_th]:border-b [&_th]:border-border">
+              <thead className="text-xs uppercase tracking-wider text-muted-foreground shadow-sm [&_th]:border-b [&_th]:border-border">
                 <tr>
                   {COLUMNS.map((c) => {
                     const isSorted = c.sortable && sortKey === c.sortable;
@@ -271,7 +271,7 @@ function Index() {
                     return (
                       <th
                         key={c.key}
-                        className={`relative px-3 py-3 select-none ${c.sortable ? "cursor-pointer hover:text-foreground" : ""}`}
+                        className={`sticky top-0 z-20 bg-surface-2 relative px-3 py-3 select-none ${c.sortable ? "cursor-pointer hover:text-foreground" : ""}`}
                         onClick={c.sortable ? () => toggleSort(c.sortable!) : undefined}
                       >
                         <span className="inline-flex items-center gap-1.5">
