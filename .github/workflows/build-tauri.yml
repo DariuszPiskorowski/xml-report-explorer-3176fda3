@@ -41,13 +41,16 @@ jobs:
       - name: Install Tauri CLI
         run: npm install --save-dev @tauri-apps/cli
 
-      - name: Build Windows x86_64 exe
-        run: npx tauri build --target x86_64-pc-windows-msvc
+      - name: Build Windows x86_64 exe (no installer)
+        run: npx tauri build --target x86_64-pc-windows-msvc --no-bundle
 
-      - name: Verify installer output
+      - name: Verify exe output
         run: |
-          if (!(Test-Path "src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe")) {
-            Write-Error "Missing NSIS installer output."
+          $exe = Get-ChildItem "src-tauri/target/x86_64-pc-windows-msvc/release/*.exe" | Select-Object -First 1
+          if (-not $exe -or $exe.Length -lt 100000) {
+            Write-Error "Missing or empty .exe output."
+          } else {
+            Write-Host "Built: $($exe.FullName) ($([math]::Round($exe.Length/1MB,2)) MB)"
           }
         shell: pwsh
 
@@ -55,5 +58,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MLBevo-Log-Viewer-exe
-          path: src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+          path: src-tauri/target/x86_64-pc-windows-msvc/release/*.exe
           if-no-files-found: error
