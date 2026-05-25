@@ -256,7 +256,7 @@ function Index() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-border bg-surface/60">
+          <div className="inline-block min-w-full rounded-xl border border-border bg-surface/60">
             <table className="text-left text-sm" style={{ tableLayout: "fixed", width: Object.values(widths).reduce((a, b) => a + b, 0) }}>
               <colgroup>
                 {COLUMNS.map((c) => (
