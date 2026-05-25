@@ -154,34 +154,40 @@ function Index() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <main className="mx-auto max-w-[1400px] px-6 py-10">
-      <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <div className="text-xs uppercase tracking-[0.2em] text-primary/80 mono">Test Report Viewer</div>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight">Interactive XML Report Viewer</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Upload a file from the test machine — each row can be expanded to see step details.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={toggleTheme}
-            className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 text-sm hover:bg-surface-2 transition-colors"
-            title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-          >
-            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            <span className="hidden sm:inline">{theme === "dark" ? "Light" : "Dark"}</span>
-          </button>
-          {steps && (
+    <>
+      <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+        <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-4 px-6 py-3">
+          <div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-primary/80 mono">Test Report Viewer</div>
+            <h1 className="text-lg font-semibold tracking-tight">Interactive XML Report Viewer</h1>
+          </div>
+          <div className="flex items-center gap-2">
             <button
-              onClick={() => { setSteps(null); setFileName(""); setQuery(""); setFilter("all"); }}
+              onClick={toggleTheme}
               className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 text-sm hover:bg-surface-2 transition-colors"
+              title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
             >
-              <RotateCcw className="h-4 w-4" /> Upload another file
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              <span className="hidden sm:inline">{theme === "dark" ? "Light" : "Dark"}</span>
             </button>
-          )}
+            {steps && (
+              <button
+                onClick={() => { setSteps(null); setFileName(""); setQuery(""); setFilter("all"); }}
+                className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 text-sm hover:bg-surface-2 transition-colors"
+              >
+                <RotateCcw className="h-4 w-4" /> Upload another file
+              </button>
+            )}
+          </div>
         </div>
       </header>
+
+      <main className="mx-auto max-w-[1400px] px-6 py-6">
+        {!steps && (
+          <p className="mb-6 text-sm text-muted-foreground">
+            Upload a file from the test machine — each row can be expanded to see step details.
+          </p>
+        )}
 
       {!steps && (
         <label
