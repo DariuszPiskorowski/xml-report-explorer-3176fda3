@@ -1,7 +1,7 @@
 [package]
-name = "mlbevo-log-viewer"
+name = "xml-log-viewer"
 version = "0.1.0"
-description = "MLBevo Log Viewer Desktop"
+description = "XML Log Viewer Desktop"
 edition = "2021"
 
 [build-dependencies]
@@ -13,5 +13,5 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
 [[bin]]
-name = "mlbevo_log_viewer"
+name = "xml_log_viewer"
 path = "src/main.rs"
