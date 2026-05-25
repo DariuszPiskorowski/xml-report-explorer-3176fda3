@@ -154,8 +154,8 @@ function Index() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <>
-      <header className="fixed top-0 left-0 right-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <div className="flex h-screen flex-col overflow-hidden">
+      <header className="shrink-0 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
         <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-4 px-6 py-3">
           <div>
             <div className="text-[10px] uppercase tracking-[0.2em] text-primary/80 mono">Test Report Viewer</div>
@@ -182,7 +182,8 @@ function Index() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1400px] px-6 pt-24 pb-6">
+      <main className="min-h-0 flex-1 overflow-y-auto">
+        <div className="mx-auto max-w-[1400px] px-6 py-6">
         {!steps && (
           <p className="mb-6 text-sm text-muted-foreground">
             Upload a file from the test machine — each row can be expanded to see step details.
@@ -311,8 +312,9 @@ function Index() {
           </div>
         </>
       )}
+        </div>
       </main>
-    </>
+    </div>
   );
 }
 
