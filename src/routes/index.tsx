@@ -311,7 +311,8 @@ function Index() {
           </div>
         </>
       )}
-    </main>
+      </main>
+    </>
   );
 }
 
