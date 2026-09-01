@@ -112,7 +112,7 @@ function Index() {
   }, []);
 
   const summary = useMemo(() => {
-    const s = { total: 0, Pass: 0, Fail: 0, Skipped: 0, Warning: 1, Unknown: 0, Running: 0 };
+    const s = { total: 0, Pass: 0, Fail: 0, Skipped: 0, Warning: 0, Unknown: 0, Running: 0 };
     steps?.forEach((x) => { s.total++; s[x.statusText]++; });
     return s;
   }, [steps]);
